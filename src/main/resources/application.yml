@@ -17,6 +17,15 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       idle-timeout: 30000
+  #MailProperties
+  mail:
+    host: smtp.sina.com
+    port: 465
+    username: lilinqingyu@sina.com
+    password: 65d4417d036064c7
+    protocol: smtps
+    properties.mail.smtp.ssl.enable: true
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -28,3 +37,9 @@ mybatis:
 #logging:
 #  level:
 #    com.lqy.community: debug
+community:
+  path:
+    domain: http://localhost:8080
+
+
+
