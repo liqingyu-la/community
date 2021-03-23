@@ -2,8 +2,10 @@ package com.lqy.community;
 
 
 import com.lqy.community.dao.DiscussPostMapper;
+import com.lqy.community.dao.LoginTicketMapper;
 import com.lqy.community.dao.UserMapper;
 import com.lqy.community.entity.DiscussPost;
+import com.lqy.community.entity.LoginTicket;
 import com.lqy.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,9 @@ public class MapperTests {
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Test
     public void testSelectUser(){
@@ -75,6 +80,26 @@ public class MapperTests {
 
         int rows = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
+    }
 
+    @Test
+    public void testInsertLoginTicket(){
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setStatus(0);
+        loginTicket.setTicket("asd");
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 60 * 10 * 1000));
+
+        loginTicketMapper.insertLoginTicketMapper(loginTicket);
+    }
+
+    @Test
+    public void testSelectLoginTicket(){
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("asd");
+        System.out.println(loginTicket);
+
+        loginTicketMapper.updateStatus(loginTicket.getTicket(),2);
+        loginTicket = loginTicketMapper.selectByTicket("asd");
+        System.out.println(loginTicket);
     }
 }

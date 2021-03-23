@@ -1,3 +1,5 @@
+var CONTEXT_PATH = "/community";/*声明全局变量*/
+
 window.alert = function(message) {
 	if(!$(".alert-box").length) {
 		$("body").append(
