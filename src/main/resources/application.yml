@@ -43,6 +43,7 @@ mybatis:
 community:
   path:
     domain: http://localhost:8080
-
+    #文件上传路径
+    upload: d:/IDEA java/data/upload
 
 
