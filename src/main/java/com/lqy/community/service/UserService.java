@@ -160,6 +160,20 @@ public class UserService implements CommunityConstant {
             loginTicketMapper.updateStatus(ticket,1);
     }
 
+//    查询凭证
+    public LoginTicket findLoginTicket(String ticket){
+        return loginTicketMapper.selectByTicket(ticket);
+    }
+
+//    更新头像
+    public int updateHeader(int userId, String headerUrl){
+        return userMapper.updateHeader(userId,headerUrl);
+    }
+
+//    修改密码
+    public int updatePassword(int userId, String password){
+        return userMapper.updatePassword(userId,password);
+    }
 
 
 
