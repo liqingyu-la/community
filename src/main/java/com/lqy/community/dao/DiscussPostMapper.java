@@ -18,4 +18,9 @@ public interface DiscussPostMapper {
 //    如果只有一个参数且在<if>里使用，必须加别名
 //    查询一共有多少帖子
     int selectDiscussPostRows(@Param("userId") int userId);
+
+//    增加帖子
+    int insertDiscussPost(DiscussPost discussPost);
+
+    DiscussPost selectDiscussPostById(int id);
 }
