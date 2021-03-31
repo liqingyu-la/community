@@ -3,9 +3,11 @@ package com.lqy.community;
 
 import com.lqy.community.dao.DiscussPostMapper;
 import com.lqy.community.dao.LoginTicketMapper;
+import com.lqy.community.dao.MessageMapper;
 import com.lqy.community.dao.UserMapper;
 import com.lqy.community.entity.DiscussPost;
 import com.lqy.community.entity.LoginTicket;
+import com.lqy.community.entity.Message;
 import com.lqy.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,9 @@ public class MapperTests {
 
     @Autowired
     private LoginTicketMapper loginTicketMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Test
     public void testSelectUser(){
@@ -101,5 +106,29 @@ public class MapperTests {
         loginTicketMapper.updateStatus(loginTicket.getTicket(),2);
         loginTicket = loginTicketMapper.selectByTicket("asd");
         System.out.println(loginTicket);
+    }
+
+    @Test
+    public void testSelectLetters() {
+        List<Message> list = messageMapper.selectConversations(111, 0, 20);
+        for ( Message message : list ){
+            System.out.println(message);
+        }
+
+        int count = messageMapper.selectConversationCount(111);
+        System.out.println(count);
+
+        list = messageMapper.selectLetters("111_112", 0, 10);
+        for (Message message : list){
+            System.out.println(message);
+        }
+
+        count = messageMapper.selectLetterCount("111_112");
+        System.out.println(count);
+
+        count = messageMapper.selectLetterUnreadCount(131,"111_131");
+        System.out.println(count);
+
+
     }
 }
