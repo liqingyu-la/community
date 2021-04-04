@@ -5,7 +5,9 @@ import com.lqy.community.entity.DiscussPost;
 import com.lqy.community.entity.Page;
 import com.lqy.community.entity.User;
 import com.lqy.community.service.DiscussPostService;
+import com.lqy.community.service.LikeService;
 import com.lqy.community.service.UserService;
+import com.lqy.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
     @Autowired
     private DiscussPostService discussPostService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @GetMapping(value = "/index")
     public String getIndexPage(Model model, Page page){/*Page用来接受页面传过来的分页信息*/
@@ -38,6 +43,11 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+
+                //获取点赞数量
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
                 discussPosts.add(map);
             }
         }

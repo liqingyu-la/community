@@ -3,6 +3,7 @@ package com.lqy.community.controller;
 
 import com.lqy.community.annotation.LoginRequired;
 import com.lqy.community.entity.User;
+import com.lqy.community.service.LikeService;
 import com.lqy.community.service.UserService;
 import com.lqy.community.util.CommunityUtil;
 import com.lqy.community.util.HostHolder;
@@ -43,6 +44,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @GetMapping(value = "/setting")
@@ -117,6 +121,23 @@ public class UserController {
         userService.updatePassword(user.getId(), password);
     }*/
 
+    //个人主页
+    @GetMapping(value = "/profile/{userId}")
+    public String getProfilePage(@PathVariable(value = "userId") int userId, Model model){
+        User user = userService.findUserById(userId);
+        if (user == null){
+            throw new RuntimeException("该用户不存在");
+        }
+
+        //用户
+        model.addAttribute("user", user);
+        //点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
+
+    }
 
 
 }

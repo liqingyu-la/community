@@ -7,7 +7,6 @@ spring:
   thymeleaf:
     cache: false
 
-
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
@@ -28,6 +27,14 @@ spring:
     properties.mail.smtp.ssl.enable: true
   jackson:
     time-zone: GMT+8
+  #    RedisProperties
+  redis:
+    database: 11
+    host: localhost
+    port: 6379
+
+
+
 
 
 mybatis:
