@@ -5,6 +5,7 @@ import com.lqy.community.annotation.LoginRequired;
 import com.lqy.community.controller.interceptor.AlphaInterceptor;
 import com.lqy.community.controller.interceptor.LoginRequiredInterceptor;
 import com.lqy.community.controller.interceptor.LoginTicketInterceptor;
+import com.lqy.community.controller.interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -21,6 +22,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginRequiredInterceptor loginRequiredInterceptor;
 
+    @Autowired
+    private MessageInterceptor messageInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(alphaInterceptor)
@@ -33,6 +37,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(loginRequiredInterceptor)
                 .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg");//排除静态资源的访问
+
+        registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg");//排除静态资源的访问
+
+
+
+
     }
 
 }
