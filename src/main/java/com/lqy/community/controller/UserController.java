@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -119,14 +120,22 @@ public class UserController implements CommunityConstant {
 
     }
 
-/*//    修改密码
-    @PutMapping(value = "/updatePassword")
-    public String updatePassword(Model model,String password){
+//    修改密码
+    @PostMapping(value = "/updatePassword")
+    public String changePassword(String oldPassword,String newPassword, Model model) {
+
+        System.out.println("oldPassword   " + oldPassword);
 
         User user = hostHolder.getUser();
-        userService.updatePassword(user.getId(), password);
-    }*/
-
+        Map<String, Object> map = userService.changePassword(user,oldPassword, newPassword);
+        if(map == null || map.isEmpty()){
+            return "redirect:/index";
+        }else {
+            model.addAttribute("oldPasswordMsg", map.get("oldPasswordMsg"));
+            model.addAttribute("newPasswordMsg", map.get("newPasswordMsg"));
+            return "/site/setting";
+        }
+    }
     //个人主页
     @GetMapping(value = "/profile/{userId}")
     public String getProfilePage(@PathVariable(value = "userId") int userId, Model model){

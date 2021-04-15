@@ -72,7 +72,7 @@ public class LoginController implements CommunityConstant {
             model.addAttribute("usernameMsg", map.get("usernameMsg"));
             model.addAttribute("passwordMsg", map.get("passwordMsg"));
             model.addAttribute("emailMsg", map.get("emailMsg"));
-            return "/site/register";//前面不能加‘/’？？？
+            return "/site/register";
         }
     }
 

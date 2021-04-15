@@ -4,10 +4,7 @@ import com.lqy.community.dao.LoginTicketMapper;
 import com.lqy.community.dao.UserMapper;
 import com.lqy.community.entity.LoginTicket;
 import com.lqy.community.entity.User;
-import com.lqy.community.util.CommunityConstant;
-import com.lqy.community.util.CommunityUtil;
-import com.lqy.community.util.MailClient;
-import com.lqy.community.util.RedisKeyUtil;
+import com.lqy.community.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +35,9 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private TemplateEngine templateEngine;//模板引擎
+
+    @Autowired
+    private HostHolder hostHolder;
 
     @Value("${community.path.domain}")
     private String domain;//域名
@@ -77,11 +77,13 @@ public class UserService implements CommunityConstant {
         User u = userMapper.selectByName(user.getUsername());
         if (u != null){
             map.put("usernameMsg", "账号已存在");
+            return map;
         }
 //        验证邮箱
         u = userMapper.selectByEmail(user.getEmail());
         if (u != null){
             map.put("emailMsg", "邮箱已存在");
+            return map;
         }
 
 
@@ -192,8 +194,27 @@ public class UserService implements CommunityConstant {
     }
 
 //    修改密码
-    public int updatePassword(int userId, String password){
-        return userMapper.updatePassword(userId,password);
+    public Map<String, Object> changePassword(User user, String oldPassword, String newPassword) {
+        Map<String, Object> map = new HashMap<>();
+        // 验证密码
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        if (!user.getPassword().equals(oldPassword)) {
+            map.put("oldPasswordMsg", "密码不正确!");
+            return map;
+        }
+        if (StringUtils.isBlank(newPassword)) {
+            map.put("newPasswordMsg", "密码不能为空!");
+            return map;
+        }
+        int id=user.getId();
+        newPassword=CommunityUtil.md5(newPassword + user.getSalt());
+        if(oldPassword.equals(newPassword)){
+            map.put("newPasswordMsg", "旧密码与新密码一致!");
+            return map;
+        }
+        userMapper.updatePassword(id,newPassword);
+        clearCache(user.getId());
+        return map;
     }
 
 //    根据用户名查找用户
