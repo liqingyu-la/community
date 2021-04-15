@@ -1,10 +1,8 @@
 package com.lqy.community.controller;
 
 
-import com.lqy.community.entity.Comment;
-import com.lqy.community.entity.DiscussPost;
-import com.lqy.community.entity.Page;
-import com.lqy.community.entity.User;
+import com.lqy.community.entity.*;
+import com.lqy.community.event.EventProducer;
 import com.lqy.community.service.CommentService;
 import com.lqy.community.service.DiscussPostService;
 import com.lqy.community.service.LikeService;
@@ -38,6 +36,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
      @PostMapping(value = "/add")
      @ResponseBody
     public String addDiscussPost(String title, String content){
@@ -52,6 +53,15 @@ public class DiscussPostController implements CommunityConstant {
          discussPost.setContent(content);
          discussPost.setCreateTime(new Date());
          discussPostService.addDiscussPost(discussPost);
+
+//         触发发帖事件
+         Event event = new Event()
+                 .setTopic(TOPIC_PUBLISH)
+                 .setUserId(user.getId())
+                 .setEntityType(ENTITY_TYPE_POST)
+                 .setEntityId(discussPost.getId());
+         eventProducer.fireEvent(event);
+
 
 //         报错情况，将来统一处理
          return CommunityUtil.getJSONString(0, "发布成功");
