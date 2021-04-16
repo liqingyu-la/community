@@ -3,14 +3,16 @@ package com.lqy.community.controller;
 
 import ch.qos.logback.classic.spi.EventArgUtil;
 import com.lqy.community.annotation.LoginRequired;
+import com.lqy.community.entity.Comment;
+import com.lqy.community.entity.DiscussPost;
+import com.lqy.community.entity.Page;
 import com.lqy.community.entity.User;
-import com.lqy.community.service.FollowService;
-import com.lqy.community.service.LikeService;
-import com.lqy.community.service.UserService;
+import com.lqy.community.service.*;
 import com.lqy.community.util.CommunityConstant;
 import com.lqy.community.util.CommunityUtil;
 import com.lqy.community.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.network.Mode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -54,6 +59,12 @@ public class UserController implements CommunityConstant {
 
     @Autowired
     private FollowService followService;
+
+    @Autowired
+    private DiscussPostService discussPostService;
+
+    @Autowired
+    private CommentService commentService;
 
     @LoginRequired
     @GetMapping(value = "/setting")
@@ -139,6 +150,7 @@ public class UserController implements CommunityConstant {
     //个人主页
     @GetMapping(value = "/profile/{userId}")
     public String getProfilePage(@PathVariable(value = "userId") int userId, Model model){
+
         User user = userService.findUserById(userId);
         if (user == null){
             throw new RuntimeException("该用户不存在");
@@ -167,6 +179,76 @@ public class UserController implements CommunityConstant {
 
         return "/site/profile";
 
+    }
+
+    //我的帖子
+    @GetMapping(value = "/myPosts/{userId}")
+    public String getMyPosts(@PathVariable(value = "userId") int userId, Model model, Page page){
+
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在!");
+        }
+        model.addAttribute("user", user);
+        int postCount = discussPostService.findDiscussPostRows(userId);
+        model.addAttribute("postCount", postCount);
+
+        page.setRows(postCount);
+        page.setLimit(5);
+        page.setPath("/user/myPosts/" + userId);
+
+        List<DiscussPost> list = discussPostService.findDiscussPosts(userId,page.getOffset(),page.getLimit());
+        List<Map<String,Object>> discussPosts = new ArrayList<>();
+        if (list != null){
+            for (DiscussPost post : list){
+                Map<String,Object> map = new HashMap<>();
+                map.put("post", post);
+
+                //获取点赞数量
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("discussPosts",discussPosts);
+
+        return "/site/my-post";
+    }
+
+    //我的评论回复
+    @GetMapping(value = "/myReplies/{userId}")
+    public String getMyReplies(@PathVariable(value = "userId") int userId, Page page, Model model){
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在!");
+        }
+        model.addAttribute("user", user);
+
+        int commentCount = commentService.findCommentCountByUserId(userId);
+        model.addAttribute("commentCount", commentCount);
+
+        page.setRows(commentCount);
+        page.setLimit(5);
+        page.setPath("/user/myReplies/" + userId);
+
+        List<Comment> list = commentService.findCommentsByUserId(userId, page.getOffset(), page.getLimit());
+        List<Map<String,Object>> comments = new ArrayList<>();
+        if (list != null){
+            for (Comment comment : list){
+                Map<String, Object> map = new HashMap<>();
+                map.put("comment", comment);
+
+                String discussPostTitle = discussPostService.findDiscussPostById(comment.getEntityId()).getTitle();
+                map.put("discussPostTitle", discussPostTitle);
+
+
+                comments.add(map);
+            }
+
+            model.addAttribute("comments", comments);
+        }
+        return "site/my-reply";
     }
 
 

@@ -27,21 +27,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(alphaInterceptor)
+/*        registry.addInterceptor(alphaInterceptor)
             .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg")//排除静态资源的访问
-                .addPathPatterns("/register", "/login");//明确想要拦截的功能路径
+                .addPathPatterns("/register", "/login");//明确想要拦截的功能路径*/
 
         registry.addInterceptor(loginTicketInterceptor)
-                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg");//排除静态资源的访问
+                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
 //                 全都拦截
 
         registry.addInterceptor(loginRequiredInterceptor)
-                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg");//排除静态资源的访问
+                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
 
         registry.addInterceptor(messageInterceptor)
-                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg");//排除静态资源的访问
-
-
+                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
 
 
     }

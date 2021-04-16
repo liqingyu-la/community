@@ -1,7 +1,9 @@
 package com.lqy.community.service;
 
+import com.lqy.community.dao.DiscussPostMapper;
 import com.lqy.community.dao.LoginTicketMapper;
 import com.lqy.community.dao.UserMapper;
+import com.lqy.community.entity.DiscussPost;
 import com.lqy.community.entity.LoginTicket;
 import com.lqy.community.entity.User;
 import com.lqy.community.util.*;
@@ -13,10 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -38,6 +37,9 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private DiscussPostMapper discussPostMapper;
 
     @Value("${community.path.domain}")
     private String domain;//域名
@@ -239,8 +241,6 @@ public class UserService implements CommunityConstant {
         String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(redisKey);
     }
-
-
 
 
 }
