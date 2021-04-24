@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_86.png"/>
+	<link rel="icon" th:href="@{/img/note.png}" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/discuss-detail.css}" />
@@ -68,9 +68,13 @@
 					<img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
 					<span th:utext="${post.title}">备战春招，面试刷题跟他复习，一个月全搞定！</span>
 					<div class="float-right">
-						<button type="button" class="btn btn-danger btn-sm">置顶</button>
-						<button type="button" class="btn btn-danger btn-sm">加精</button>
-						<button type="button" class="btn btn-danger btn-sm">删除</button>
+						<input type="hidden" id="postId" th:value="${post.id}">
+						<button type="button" class="btn btn-danger btn-sm" id="topBtn"
+							th:disabled="${post.type==1}" sec:authorize="hasAnyAuthority('moderator')">置顶</button>
+						<button type="button" class="btn btn-danger btn-sm" id="wonderfulBtn"
+								th:disabled="${post.status==1}" sec:authorize="hasAnyAuthority('moderator')">加精</button>
+						<button type="button" class="btn btn-danger btn-sm" id="deleteBtn"
+								th:disabled="${post.status==2}" sec:authorize="hasAnyAuthority('admin')">删除</button>
 					</div>
 				</h6>
 				<!-- 作者 -->
@@ -183,7 +187,7 @@
 													<input type="hidden" name="targetId" th:value="${rvo.user.id}">
 												</div>
 												<div class="text-right mt-2">
-													<button type="submit" class="btn btn-primary btn-sm" onclick="#">&nbsp;&nbsp;回&nbsp;&nbsp;复&nbsp;&nbsp;</button>
+													<button type="submit" class="btn btn-primary btn-sm" >&nbsp;&nbsp;回&nbsp;&nbsp;复&nbsp;&nbsp;</button>
 												</div>
 											</form>
 										</div>
@@ -241,7 +245,7 @@
 		</div>
 
 		<!-- 尾部 -->
-		<footer class="bg-dark">
+		<footer class="bg-dark" th:replace="index::footer">
 			<div class="container">
 				<div class="row">
 					<!-- 二维码 -->
