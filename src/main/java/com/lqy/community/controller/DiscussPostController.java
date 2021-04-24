@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Component
@@ -157,5 +158,66 @@ public class DiscussPostController implements CommunityConstant {
 
         return "/site/discuss-detail";
     }
+
+    //置顶
+    @PostMapping(value = "/top")
+    @ResponseBody
+    public String setTop(int id){
+        discussPostService.updateType(id, 1);
+
+        // 出发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //加精
+    @PostMapping(value = "/wonderful")
+    @ResponseBody
+    public String setWonderful(int id){
+        discussPostService.updateStatus(id, 1);
+
+        // 出发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //删除
+    @PostMapping(value = "/delete")
+    @ResponseBody
+    public String setDelete(int id){
+        discussPostService.updateStatus(id, 2);
+
+        // 出发删帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_DELETE)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+/*    //选择分区
+    @PostMapping(value = "/subject")
+//    @ResponseBody
+    public String setSubject(int id, int subject){
+         discussPostService.updateStatus(id, subject);
+         if ( subject == )
+
+
+    }*/
 
 }

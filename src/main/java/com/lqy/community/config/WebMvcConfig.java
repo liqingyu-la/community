@@ -19,8 +19,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginTicketInterceptor loginTicketInterceptor;
 
-    @Autowired
-    private LoginRequiredInterceptor loginRequiredInterceptor;
+/*    @Autowired
+    private LoginRequiredInterceptor loginRequiredInterceptor;*/
 
     @Autowired
     private MessageInterceptor messageInterceptor;
@@ -35,8 +35,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
 //                 全都拦截
 
-        registry.addInterceptor(loginRequiredInterceptor)
-                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
+        /*registry.addInterceptor(loginRequiredInterceptor)
+                .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问*/
 
         registry.addInterceptor(messageInterceptor)
                 .excludePathPatterns("/css/*.css", "/js/*.js", "/img/*.png", "/img/*.jpg", "/img/*.jpeg", "/img/*.ico");//排除静态资源的访问
