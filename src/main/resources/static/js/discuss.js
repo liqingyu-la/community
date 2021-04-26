@@ -2,6 +2,7 @@ $(function(){
    $("#topBtn").click(setTop);
    $("#wonderfulBtn").click(setWonderful);
    $("#deleteBtn").click(setDelete);
+   $("#section").change(setSubject);
 });
 
 function like(btn, entityType, entityId, entityUserId, postId) {
@@ -61,6 +62,26 @@ function setDelete() {
             data = $.parseJSON(data);
             if (data.code == 0) {
                 location.href = CONTEXT_PATH + "/index";
+            } else {
+                alert(data.msg);
+            }
+        }
+    )
+}
+
+
+//分区
+function setSubject() {
+
+    var section = $("#section").val();
+    var id = $("#postId").val();
+    $.post(
+        CONTEXT_PATH + "/discuss/section",
+        {"id":id,"section":section},
+        function (data) {
+            data = $.parseJSON(data);
+            if (data.code == 0) {
+                window.location.reload();
             } else {
                 alert(data.msg);
             }

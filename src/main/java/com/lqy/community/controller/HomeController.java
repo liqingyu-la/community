@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,49 @@ public class HomeController implements CommunityConstant {
         model.addAttribute("discussPosts",discussPosts);
         return "/index";
     }
+
+
+    @GetMapping(value = "/section/{section}")
+    public String getSection(@PathVariable("section")int section, Model model, Page page){/*Page用来接受页面传过来的分页信息*/
+        page.setRows(discussPostService.findSectionDiscussPostsRows(section));
+        page.setPath("/section" + section);
+
+        List<DiscussPost> list = discussPostService.findSubjectDiscussPosts(section,page.getOffset(),page.getLimit());
+        List<Map<String,Object>> discussPosts = new ArrayList<>();
+        if (list != null){
+            for (DiscussPost post : list){
+                Map<String,Object> map = new HashMap<>();
+                map.put("post", post);
+                User user = userService.findUserById(post.getUserId());
+                map.put("user", user);
+
+                //获取点赞数量
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("section", section);
+        model.addAttribute("discussPosts",discussPosts);
+
+        if ( section == SUBJECT_LITERARY ){
+            return "/site/subject/literary";
+        } else if ( section == SUBJECT_LAW ){
+            return "/site/subject/law";
+        } else if ( section == SUBJECT_ECONOMICS ){
+            return "/site/subject/economics";
+        } else if ( section == SUBJECT_COMPUTER ){
+            return "/site/subject/computer";
+        }
+         return "/index";
+    }
+
+
+
+
+
+
 
     @GetMapping(value = "/error")
     public String  getErrorPage(){

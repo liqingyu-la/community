@@ -165,7 +165,7 @@ public class DiscussPostController implements CommunityConstant {
     public String setTop(int id){
         discussPostService.updateType(id, 1);
 
-        // 出发发帖事件
+        // 触发发帖事件
         Event event = new Event()
                 .setTopic(TOPIC_PUBLISH)
                 .setUserId(hostHolder.getUser().getId())
@@ -210,14 +210,24 @@ public class DiscussPostController implements CommunityConstant {
         return CommunityUtil.getJSONString(0);
     }
 
-/*    //选择分区
-    @PostMapping(value = "/subject")
-//    @ResponseBody
-    public String setSubject(int id, int subject){
-         discussPostService.updateStatus(id, subject);
-         if ( subject == )
+    //选择分区
+    @PostMapping(value = "/section")
+    @ResponseBody
+    public String setSubject(int id, int section){
+
+        discussPostService.updateSection(id, section);
+
+        // 触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
 
 
-    }*/
+    }
 
 }

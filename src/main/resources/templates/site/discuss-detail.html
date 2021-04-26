@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/discuss-detail.css}" />
-	<title>牛客网-帖子详情</title>
+	<title>学习交流分享-帖子详情</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -68,18 +68,16 @@
 					<img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
 					<span th:utext="${post.title}">备战春招，面试刷题跟他复习，一个月全搞定！</span>
 					<div class="float-right">
-						<input type="hidden" id="postId" th:value="${post.id}">
-
-                        <form>
-                            <select name="subject">
-                                <option value="no" selected="selected">无</option>
-                                <option value="literary">文学</option>
-                                <option value="math">数学</option>
-                                <option value="law">法学</option>
-                                <option value="economics">经济学</option>
-                            </select>
-                            <!--<button>提交</button>-->
-                        </form>
+                        <input type="hidden" id="postId" th:value="${post.id}">
+						<!--<form method="post" >&lt;!&ndash;th:action="@{/discuss/section}"&ndash;&gt;-->
+							<select name="section" id="section" class="btn btn-danger btn-sm">
+								<option value="0" th:selected="${post.section == 0}">未分类</option>
+								<option value="1" th:selected="${post.section == 1}">文学</option>
+								<option value="2" th:selected="${post.section == 2}">法学</option>
+								<option value="3" th:selected="${post.section == 3}">经济学</option>
+								<option value="4" th:selected="${post.section == 4}">计算机</option>
+							</select>
+						<!--</form>-->
 
 						<button type="button" class="btn btn-danger btn-sm" id="topBtn"
 							th:disabled="${post.type==1}" sec:authorize="hasAnyAuthority('moderator')">置顶</button>

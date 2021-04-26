@@ -45,7 +45,7 @@ public interface CommunityConstant {
     //学科： 文学
     int SUBJECT_LITERARY = 1;
     //学科： 法学
-    int SUBJECT_MATH = 2;
+    int SUBJECT_LAW = 2;
     //学科： 经济学
     int SUBJECT_ECONOMICS = 3;
     //学科： 计算机

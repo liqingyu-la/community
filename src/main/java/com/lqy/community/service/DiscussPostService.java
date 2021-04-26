@@ -59,4 +59,19 @@ public class DiscussPostService {
         return discussPostMapper.updateStatus(id, status);
     }
 
+
+
+
+    public List<DiscussPost> findSubjectDiscussPosts(int section, int offset, int limit){
+        return discussPostMapper.selectSectionDiscussPosts(section, offset, limit);
+    }
+
+    public int findSectionDiscussPostsRows(int section){
+        return discussPostMapper.selectSectionDiscussPostsRows(section);
+    }
+
+    public int updateSection(int id, int section){
+        return discussPostMapper.updateDiscussPostSection(id, section);
+    }
+
 }

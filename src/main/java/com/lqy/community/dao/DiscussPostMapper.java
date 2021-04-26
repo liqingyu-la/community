@@ -30,4 +30,17 @@ public interface DiscussPostMapper {
 
     int updateStatus(int id, int status);
 
+
+    //更新科目
+    int updateDiscussPostSection(int id, int section);
+
+    //查找科目
+    List<DiscussPost> selectSectionDiscussPosts(int section, int offset, int limit);
+
+    //查找该科目数量
+    int selectSectionDiscussPostsRows(int section);
+
+
+
+
 }

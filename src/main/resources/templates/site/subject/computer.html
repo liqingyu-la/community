@@ -11,7 +11,7 @@
 	<link rel="icon" th:href="@{/img/note.png}" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" /><!--通过thymeleaf模板找到资源-->
-	<title>学习交流分享-首页</title>
+	<title>学习交流分享-计算机</title>
 </head>
 <body>	
 	<div class="nk-container">
@@ -70,7 +70,7 @@
 					<!-- 筛选条件 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/index}">最新</a>
+							<a class="nav-link" th:href="@{/index}">最新</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" th:href="@{/index}">最热</a>
@@ -85,9 +85,10 @@
 							<a class="nav-link" th:href="@{/section/3}">经济学</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:href="@{/section/4}">计算机</a>
+							<a class="nav-link active" th:href="@{/section/4}">计算机</a>
 						</li>
 					</ul>
+
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal" th:if="${loginUser!=null}">我要发布</button><!--登录后显示按钮-->
 				</div>
 				<!-- 弹出框 -->

@@ -5,11 +5,11 @@
 <mapper namespace="com.lqy.community.dao.DiscussPostMapper">
 
     <sql id="selectFields">
-        id, user_id, title, content, type, status, create_time, comment_count, score
+        id, user_id, title, content, type, status, create_time, comment_count, score, section
     </sql>
 
     <sql id="insertFields">
-        user_id, title, content, type, status, create_time, comment_count, score
+        user_id, title, content, type, status, create_time, comment_count, score, section
     </sql>
 
     <select id="selectDiscussPosts" resultType="DiscussPost">-- 返回值类型resultType
@@ -54,6 +54,32 @@
     <update id="updateStatus">
         update discuss_post set status = #{status} where id = #{id}
     </update>
+
+
+
+
+    <update id="updateDiscussPostSection">
+        update discuss_post set section = #{section} where id = #{id}
+    </update>
+
+
+    <select id="selectSectionDiscussPosts" resultType="DiscussPost">-- 返回值类型resultType
+        select <include refid="selectFields"></include>
+        from discuss_post
+        where status != 2
+        and section = #{section}
+        order by type desc, create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectSectionDiscussPostsRows" resultType="int">
+        select count(id)
+        from discuss_post
+        where status != 2
+        and section = #{section}
+    </select>
+
+
 
 
 

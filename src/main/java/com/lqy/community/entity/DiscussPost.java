@@ -38,6 +38,18 @@ public class DiscussPost {
     @Field(type = FieldType.Double)
     private double score;
 
+    @Field(type = FieldType.Integer)
+    private int section;
+
+
+    public int getSection() {
+        return section;
+    }
+
+    public void setSection(int section) {
+        this.section = section;
+    }
+
     public int getId() {
         return id;
     }
@@ -122,6 +134,7 @@ public class DiscussPost {
                 ", createTime=" + createTime +
                 ", commentCount=" + commentCount +
                 ", score=" + score +
+                ", section=" + section +
                 '}';
     }
 }

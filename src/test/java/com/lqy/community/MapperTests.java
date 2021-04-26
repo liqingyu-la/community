@@ -128,7 +128,21 @@ public class MapperTests {
 
         count = messageMapper.selectLetterUnreadCount(131,"111_131");
         System.out.println(count);
+    }
 
 
+
+    @Test
+    public void testSection(){
+        List<DiscussPost> list = discussPostMapper.selectSectionDiscussPosts(1, 0, 20);
+        for ( DiscussPost discussPost : list){
+            System.out.println(discussPost);
+        }
+
+
+//        int i = discussPostMapper.updateDiscussPostSection(111, 1);
+
+        int count = discussPostMapper.selectSectionDiscussPostsRows(1);
+        System.out.println(count);
     }
 }
