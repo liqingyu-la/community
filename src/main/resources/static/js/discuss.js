@@ -3,6 +3,7 @@ $(function(){
    $("#wonderfulBtn").click(setWonderful);
    $("#deleteBtn").click(setDelete);
    $("#section").change(setSubject);
+   $(".collect-btn").click(collect);
 });
 
 function like(btn, entityType, entityId, entityUserId, postId) {
@@ -88,3 +89,41 @@ function setSubject() {
         }
     )
 }
+
+
+function collect() {
+    var btn = this;
+    if($(btn).hasClass("btn-info")) {
+        // 关注TA
+        $.post(
+            CONTEXT_PATH + "/follow",
+            {"entityType":1,"entityId":$(btn).prev().val()},
+            function (data) {
+                data = $.parseJSON(data);
+                if (data.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+            }
+        );
+        // $(btn).text("已关注").removeClass("btn-info").addClass("btn-secondary");
+    } else {
+        // 取消关注
+        $.post(
+            CONTEXT_PATH + "/unfollow",
+            {"entityType":1,"entityId":$(btn).prev().val()},
+            function (data) {
+                data = $.parseJSON(data);
+                if (data.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+            }
+        );
+
+        // $(btn).text("关注TA").removeClass("btn-secondary").addClass("btn-info");
+    }
+}
+

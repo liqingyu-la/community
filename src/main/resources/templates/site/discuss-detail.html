@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/discuss-detail.css}" />
-	<title>学习交流分享-帖子详情</title>
+	<title>学习交流分享-笔记详情</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -61,21 +61,24 @@
 
 		<!-- 内容 -->
 		<div class="main">
-			<!-- 帖子详情 -->
+			<!-- 笔记详情 -->
 			<div class="container">
 				<!-- 标题 -->
 				<h6 class="mb-4">
 					<img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
 					<span th:utext="${post.title}">备战春招，面试刷题跟他复习，一个月全搞定！</span>
 					<div class="float-right">
-                        <input type="hidden" id="postId" th:value="${post.id}">
+						<input type="hidden" id="postId" th:value="${post.id}" >
+						<button type="button" th:class="|btn ${hasFollowed?'btn-secondary':'btn-info'} btn-sm float-right mr-5 collect-btn|"
+								th:text="${hasFollowed?'已收藏':'收藏'}" th:if="${loginUser!=null}">收藏</button>
 						<!--<form method="post" >&lt;!&ndash;th:action="@{/discuss/section}"&ndash;&gt;-->
-							<select name="section" id="section" class="btn btn-danger btn-sm">
+							<select name="section" id="section" class="btn btn-danger btn-sm" sec:authorize="hasAnyAuthority('moderator')">
 								<option value="0" th:selected="${post.section == 0}">未分类</option>
 								<option value="1" th:selected="${post.section == 1}">文学</option>
 								<option value="2" th:selected="${post.section == 2}">法学</option>
 								<option value="3" th:selected="${post.section == 3}">经济学</option>
 								<option value="4" th:selected="${post.section == 4}">计算机</option>
+								<option value="5" th:selected="${post.section == 5}">提问</option>
 							</select>
 						<!--</form>-->
 

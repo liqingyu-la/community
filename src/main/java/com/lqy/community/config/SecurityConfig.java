@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                /*.antMatchers(//登录以后才能访问
+                .antMatchers(//登录以后才能访问
                         "/user/setting",
                         "/user/upload/",
                         "/discuss/add",
@@ -45,11 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                         AUTHORITY_USER,
                         AUTHORITY_ADMIN,
                         AUTHORITY_MODERATOR
-                )*/
+                )
                 .antMatchers(
                         "/discuss/top",
                         "/discuss/wonderful",
-                        "/discuss/section"
+                        "/discuss/section",
+                        "/discuss/delete"
                 )
                 .hasAnyAuthority(
                         AUTHORITY_MODERATOR

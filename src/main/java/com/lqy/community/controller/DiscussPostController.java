@@ -3,10 +3,7 @@ package com.lqy.community.controller;
 
 import com.lqy.community.entity.*;
 import com.lqy.community.event.EventProducer;
-import com.lqy.community.service.CommentService;
-import com.lqy.community.service.DiscussPostService;
-import com.lqy.community.service.LikeService;
-import com.lqy.community.service.UserService;
+import com.lqy.community.service.*;
 import com.lqy.community.util.CommunityConstant;
 import com.lqy.community.util.CommunityUtil;
 import com.lqy.community.util.HostHolder;
@@ -39,6 +36,9 @@ public class DiscussPostController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private FollowService followService;
 
      @PostMapping(value = "/add")
      @ResponseBody
@@ -87,6 +87,13 @@ public class DiscussPostController implements CommunityConstant {
         //点赞状态
         int likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_POST, discussPostId);
         model.addAttribute("likeStatus", likeStatus);
+
+        //收藏状态
+        boolean hasFollowed = false;
+        if (hostHolder.getUser() != null){
+            hasFollowed = followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_POST, discussPostId);
+        }
+        model.addAttribute("hasFollowed", hasFollowed);
 
 
         //评论分页信息
@@ -229,5 +236,7 @@ public class DiscussPostController implements CommunityConstant {
 
 
     }
+
+
 
 }

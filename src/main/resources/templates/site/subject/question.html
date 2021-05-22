@@ -11,7 +11,7 @@
 	<link rel="icon" th:href="@{/img/note.png}" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" /><!--通过thymeleaf模板找到资源-->
-	<title>学习交流分享-首页</title>
+	<title>学习交流分享-提问</title>
 </head>
 <body>	
 	<div class="nk-container">
@@ -70,7 +70,7 @@
 					<!-- 筛选条件 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
-							<a class="nav-link active" th:href="@{/index}">最新</a>
+							<a class="nav-link" th:href="@{/index}">最新</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" th:href="@{/index}">最热</a>
@@ -88,10 +88,10 @@
 							<a class="nav-link" th:href="@{/section/4}">计算机</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:href="@{/section/5}">提问</a>
+							<a class="nav-link active" th:href="@{/section/5}">提问</a>
 						</li>
 					</ul>
-<!--					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal" th:if="${loginUser!=null}">我要提问</button>&lt;!&ndash;登录后显示按钮&ndash;&gt;-->
+
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal" th:if="${loginUser!=null}">我要发布</button><!--登录后显示按钮-->
 				</div>
 				<!-- 弹出框 -->
@@ -99,7 +99,7 @@
 					<div class="modal-dialog modal-lg" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="publishModalLabel">笔记发布</h5>
+								<h5 class="modal-title" id="publishModalLabel">新帖发布</h5>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
@@ -137,7 +137,7 @@
 					</div>
 				</div>
 				
-				<!-- 帖子列表 -->
+				<!-- 笔记列表 -->
 				<ul class="list-unstyled">
 					<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${discussPosts}" ><!--循环列表 map便利discussPosts-->
 						<a th:href="@{|/user/profile/${map.user.id}|}">

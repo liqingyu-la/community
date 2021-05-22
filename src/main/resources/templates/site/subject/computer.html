@@ -87,6 +87,9 @@
 						<li class="nav-item">
 							<a class="nav-link active" th:href="@{/section/4}">计算机</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/section/5}">提问</a>
+						</li>
 					</ul>
 
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal" th:if="${loginUser!=null}">我要发布</button><!--登录后显示按钮-->
@@ -134,7 +137,7 @@
 					</div>
 				</div>
 				
-				<!-- 帖子列表 -->
+				<!-- 笔记列表 -->
 				<ul class="list-unstyled">
 					<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${discussPosts}" ><!--循环列表 map便利discussPosts-->
 						<a th:href="@{|/user/profile/${map.user.id}|}">

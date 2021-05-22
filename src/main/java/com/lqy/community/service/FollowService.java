@@ -1,5 +1,6 @@
 package com.lqy.community.service;
 
+import com.lqy.community.entity.DiscussPost;
 import com.lqy.community.entity.User;
 import com.lqy.community.util.CommunityConstant;
 import com.lqy.community.util.RedisKeyUtil;
@@ -20,6 +21,9 @@ public class FollowService implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DiscussPostService discussPostService;
+
     //关注
     public void follow(int userId, int entityType, int entityId){
 
@@ -38,6 +42,7 @@ public class FollowService implements CommunityConstant {
             }
         });
     }
+
 
     //取消关注
     public void unfollow(int userId, int entityType, int entityId){
@@ -111,6 +116,27 @@ public class FollowService implements CommunityConstant {
             map.put("user", user);
             Double score = redisTemplate.opsForZSet().score(followerKey, targetId);
             map.put("followTime", new Date(score.longValue()));
+            list.add(map);
+        }
+        return list;
+    }
+
+    //查询收藏的笔记
+    public List<Map<String, Object>> findCollection(int userId, int offset, int limit){
+        String collectKey = RedisKeyUtil.getFolloweeKey(userId, ENTITY_TYPE_POST);
+        Set<Integer> targetIds = redisTemplate.opsForZSet().reverseRange(collectKey, offset, offset + limit - 1);
+
+        if (targetIds == null){
+            return null;
+        }
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Integer targetId : targetIds) {
+            Map<String, Object> map = new HashMap<>();
+
+            DiscussPost discussPost = discussPostService.findDiscussPostById(targetId);
+            map.put("discussPost", discussPost);
+            Double score = redisTemplate.opsForZSet().score(collectKey, targetId);
+            map.put("collectTime", new Date(score.longValue()));
             list.add(map);
         }
         return list;

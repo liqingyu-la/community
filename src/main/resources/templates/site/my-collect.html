@@ -6,8 +6,7 @@
 	<link rel="icon" th:href="@{/img/note.png}" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>学习交流分享-通知</title>
+	<title>学习交流分享-个人主页</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -62,89 +61,87 @@
 		<!-- 内容 -->
 		<div class="main">
 			<div class="container">
+				<!-- 选项 -->
 				<div class="position-relative">
-					<!-- 选项 -->
-					<ul class="nav nav-tabs mb-3">
+					<ul class="nav nav-tabs">
 						<li class="nav-item">
-							<a class="nav-link position-relative" th:href="@{/letter/list}">
-								朋友私信<span class="badge badge-danger" th:text="${letterUnreadCount==0?'':letterUnreadCount}">3</span>
-							</a><!--不等0时显示-->
+							<a class="nav-link" th:href="@{'/user/profile/' + ${user.id}}">个人信息</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link position-relative active" th:href="@{/notice/list}">
-								系统通知<span class="badge badge-danger" th:text="${noticeUnreadCount==0?'':noticeUnreadCount}">27</span>
-							</a>
+							<a class="nav-link" th:href="@{'/user/myPosts/' + ${user.id}}" th:text="${loginUser.id!=user.id?'他的笔记':'我的笔记'}">我的笔记</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{'/user/myReplies/' + ${user.id}}" th:text="${loginUser.id!=user.id?'他的回复':'我的回复'}">我的回复</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{'/user/myCollect/' + ${user.id}}" th:text="${loginUser.id!=user.id?'他的收藏':'我的收藏'}">我的回复</a>
 						</li>
 					</ul>
-				</div>	
-				
-				<!-- 通知列表 -->
-				<ul class="list-unstyled">
-					<!--评论类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${commentNotice != null}">
-						<span class="badge badge-danger" th:text="${commentNotice.unread==0?'':commentNotice.unread}">3</span>
-						<img src="http://static.nowcoder.com/images/head/reply.png" class="mr-4 user-header" alt="通知图标">
-						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<span>评论</span>
-								<span class="float-right text-muted font-size-12"
-									th:text="${#dates.format(commentNotice.message.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</span>
-							</h6>
-							<div>
-								<a th:href="@{/notice/detail/comment}">
-									用户
-									<i th:utext="${commentNotice.user.username}">宇哥</i> 评论了你的
-									<b th:text="${commentNotice.entityType==1?'笔记':'回复'}">笔记</b> ...</a>
-								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${commentNotice.count}">3</i> 条会话</span></li>
-								</ul>
+					<a th:href="@{'/user/profile/' + ${user.id}}" class="text-muted position-absolute rt-0">返回个人主页&gt;</a>
+				</div>
+				<!-- 我的笔记 -->
+				<div class="mt-4">
+					<h6><b class="square"></b> 收藏的笔记(<i th:text="${postCount}">6</i>)</h6>
+<!--					<ul class="list-unstyled mt-4 pl-3 pr-3" >
+						<li class="border-bottom pb-3 mt-4" th:each="map:${discussPosts}">
+							<div class="font-size-16 text-info">
+								<a th:href="@{'/discuss/detail/' + ${map.discussPost.id}}" class="text-info" th:utext="${map.discussPost.title}" >备战春招，面试刷题跟他复习，一个月全搞定！</a>
 							</div>
-						</div>
-					</li>
-					<!--点赞类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${likeNotice!=null}">
-						<span class="badge badge-danger" th:text="${likeNotice.unread!=0?likeNotice.unread:''}">3</span>
-						<img src="http://static.nowcoder.com/images/head/like.png" class="mr-4 user-header" alt="通知图标">
-						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<span>赞</span>
-								<span class="float-right text-muted font-size-12"
-									  th:text="${#dates.format(likeNotice.message.createTime,'yyyy-MM-dd HH:mm:ss')}">2021-04-28 14:13:25</span>
-							</h6>
-							<div>
-								<a th:href="@{/notice/detail/like}">
-									用户
-									<i th:utext="${likeNotice.user.username}">宇哥</i> 点赞了你的
-									<b th:text="${likeNotice.entityType==1?'笔记':'回复'}">笔记</b> ...</a>
-								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${likeNotice.count}">3</i> 条会话</span></li>
-								</ul>
+							<div class="mt-1 font-size-14" th:utext="${map.discussPost.content}">
+								金三银四的金三已经到了，你还沉浸在过年的喜悦中吗？
+								如果是，那我要让你清醒一下了：目前大部分公司已经开启了内推，正式网申也将在3月份陆续开始，金三银四，春招的求职黄金时期已经来啦！！！
+								再不准备，作为19应届生的你可能就找不到工作了。。。作为20届实习生的你可能就找不到实习了。。。
+								现阶段时间紧，任务重，能做到短时间内快速提升的也就只有算法了，
+								那么算法要怎么复习？重点在哪里？常见笔试面试算法题型和解题思路以及最优代码是怎样的？
+								跟左程云老师学算法，不仅能解决以上所有问题，还能在短时间内得到最大程度的提升！！！
 							</div>
-						</div>
-					</li>
-					<!--关注类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${followNotice!=null}">
-						<span class="badge badge-danger" th:text="${followNotice.unread==0?'':followNotice.unread}">3</span>
-						<img src="http://static.nowcoder.com/images/head/follow.png" class="mr-4 user-header" alt="通知图标">
-						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<span>关注</span>
-								<span class="float-right text-muted font-size-12"
-									  th:text="${#dates.format(followNotice.message.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</span>
-							</h6>
-							<div>
-								<a th:href="@{/notice/detail/follow}">
-									用户
-									<i th:utext="${followNotice.user.username}">宇哥</i>
-                                     关注了你 ...
-                                    </a>
-								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${followNotice.count}">3</i> 条会话</span></li>
-								</ul>
+							<div class="text-right font-size-12 text-muted">
+								赞 <i class="mr-3" th:text="${map.likeCount}">11</i> 发布于 <b th:text="${#dates.format(map.discussPost.createTime, 'yyyy-MM-dd HH:mm:ss')}">2019-04-15 10:10:10</b>
 							</div>
-						</div>
-					</li>					
-				</ul>
+						</li>
+					</ul>-->
+
+					<ul class="list-unstyled">
+						<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${discussPosts}" ><!--循环列表 map便利discussPosts-->
+							<a th:href="@{|/creator/profile/${map.creator.id}|}">
+								<img th:src="${map.creator.headerUrl}" class="mr-4 rounded-circle" alt="用户头像" style="width:50px;height:50px;"><!--动态显示用户头像-->
+							</a>
+							<div class="media-body">
+								<h6 class="mt-0 mb-3">
+									<a th:href="@{|/discuss/detail/${map.discussPost.id}|}" th:utext="${map.discussPost.title}">备战春招，面试刷题跟他复习，一个月全搞定！</a><!--utext显示转义字符-->
+									<!--常量+变量的组合写法-->
+									<span class="badge badge-secondary bg-primary" th:if="${map.discussPost.type==1}">置顶</span><!--if标签判断-->
+									<span class="badge badge-secondary bg-danger" th:if="${map.discussPost.status==1}">精华</span>
+								</h6>
+								<div class="text-muted font-size-12">
+									<u class="mr-3" th:utext="${map.creator.username}">寒江雪<!--动态作者--></u> 发布于 <b th:text="${#dates.format(map.discussPost.createTime,'yyyy-MM-dd HH:mm:ss')}"><!--thymeleaf内置工具调整时间格式-->2019-04-15 15:32:18</b>
+									<ul class="d-inline float-right">
+										<li class="d-inline ml-2">赞 <span th:text="${map.likeCount}">11</span></li>
+										<li class="d-inline ml-2">|</li>
+										<li class="d-inline ml-2">回帖 <span th:text="${map.discussPost.commentCount}">7</span></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+					</ul>
+
+
+
+					<!-- 分页 -->
+					<nav class="mt-5" th:replace="index::pagination">
+						<ul class="pagination justify-content-center">
+							<li class="page-item"><a class="page-link" href="#">首页</a></li>
+							<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+							<li class="page-item active"><a class="page-link" href="#">1</a></li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item"><a class="page-link" href="#">4</a></li>
+							<li class="page-item"><a class="page-link" href="#">5</a></li>
+							<li class="page-item"><a class="page-link" href="#">下一页</a></li>
+							<li class="page-item"><a class="page-link" href="#">末页</a></li>
+						</ul>
+					</nav>					
+				</div>				
 			</div>
 		</div>
 

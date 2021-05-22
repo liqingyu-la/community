@@ -1,10 +1,12 @@
 package com.lqy.community.controller;
 
+import com.lqy.community.entity.DiscussPost;
 import com.lqy.community.entity.Event;
 import com.lqy.community.entity.Page;
 import com.lqy.community.entity.User;
 import com.lqy.community.event.EventProducer;
 import com.lqy.community.service.FollowService;
+import com.lqy.community.service.LikeService;
 import com.lqy.community.service.UserService;
 import com.lqy.community.util.CommunityConstant;
 import com.lqy.community.util.CommunityUtil;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +38,9 @@ public class FollowController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private LikeService likeService;
 
     @PostMapping("/follow")
     @ResponseBody
@@ -108,10 +114,55 @@ public class FollowController implements CommunityConstant {
         return "/site/follower";
     }
 
+
+//    收藏
+    @GetMapping("/user/myCollect/{userId}")
+    public String getCollection(@PathVariable("userId") Integer userId, Page page, Model model){
+        User user = userService.findUserById(userId);
+        if (user == null){
+            throw new RuntimeException("该用户不存在");
+        }
+        model.addAttribute("user", user);
+
+        int postCount = (int) followService.findFolloweeCount(userId, ENTITY_TYPE_POST);
+        model.addAttribute("postCount", postCount);
+
+        page.setLimit(5);
+        page.setPath("/user/myCollect/" + userId);
+        page.setRows(postCount);
+
+        List<Map<String, Object>> collection = followService.findCollection(userId, page.getOffset(), page.getLimit());
+        if (collection != null){
+            for (Map<String, Object> map : collection){
+                DiscussPost discussPost = (DiscussPost) map.get("discussPost");
+                map.put("hasCollected", hasCollected(discussPost.getId()));
+
+//                map.put("discussPost", discussPost);
+                User creator = userService.findUserById(discussPost.getUserId());
+                map.put("creator", creator);
+
+                //获取点赞数量
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, discussPost.getId());
+                map.put("likeCount", likeCount);
+
+//                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("discussPosts", collection);
+        return "/site/my-collect";
+    }
+
     private boolean hasFollowed(int userId){
         if (hostHolder.getUser() == null){
             return false;
         }
         return followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId);
+    }
+
+    private boolean hasCollected(int discussPostId){
+        if (hostHolder.getUser() == null){
+            return false;
+        }
+        return followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_POST, discussPostId);
     }
 }

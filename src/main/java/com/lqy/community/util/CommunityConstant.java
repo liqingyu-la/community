@@ -50,4 +50,6 @@ public interface CommunityConstant {
     int SUBJECT_ECONOMICS = 3;
     //学科： 计算机
     int SUBJECT_COMPUTER = 4;
+    //学科：   提问
+    int SUBJECT_Question = 5;
 }
